@@ -1,12 +1,10 @@
 {
   "presets": [
-    [
-      "@babel/preset-env"
-    ]
+    "@babel/env",
+    "@babel/typescript"
   ],
   "plugins": [
-    // Stage 0
-    "@babel/plugin-proposal-function-bind",
-    "@babel/plugin-external-helpers"
+    "@babel/proposal-class-properties",
+    "@babel/proposal-object-rest-spread"
   ]
 }

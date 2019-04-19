@@ -1,15 +1,41 @@
-import VueTest from './components/test.vue'
+import Form from './components/form';
+import FormLine from './components/form-line';
+import FormItem from './components/form-item';
+import Popover from './components/popover';
+import Col from './components/col';
+import Content from './components/content';
+import VueText from './components/text';
+import Layer from './components/layer';
+import RenderSlot from './components/render-slot';
 
 export {
-  VueTest,
+  Form,
+  FormLine,
+  FormItem,
+  Popover,
+  Col,
+  Content,
+  VueText,
+  Layer,
+  RenderSlot,
 }
 
-const plugin = {
-  // eslint-disable-next-line no-undef
-  // version: VERSION,
-  install (Vue, options) {
-    Vue.component(VueTest.name, VueTest)
-  },
+const components = [
+  Form,
+  FormLine,
+  FormItem,
+  Popover,
+  Col,
+  Content,
+  VueText,
+  Layer,
+  RenderSlot,
+];
+
+const plugin = function (Vue, opts = {}) {
+  components.forEach(component => {
+    Vue.component(component.name, component);
+  });
 }
 
 export default plugin

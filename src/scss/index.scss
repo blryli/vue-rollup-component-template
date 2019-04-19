@@ -1,0 +1,247 @@
+.vue-form::before,
+.vue-form::after {
+  display: table;
+  content: "";
+}
+
+.vue-form:after {
+  clear: both;
+}
+
+.vue-form-line:before {
+  display: table;
+  content: "";
+}
+
+.vue-form-line:after {
+  display: table;
+  content: "";
+  clear: both;
+}
+
+.form-line--abreast+.form-line--abreast {
+  margin-left: -1px;
+}
+
+.vue-form-item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+}
+
+.vue-form-item:before {
+  display: table;
+  content: "";
+}
+
+.vue-form-item:after {
+  display: table;
+  content: "";
+  clear: both;
+}
+
+.vue-form-item .vue-popover-trigger {
+  position: relative;
+}
+
+.vue-form-item.is-required>.vue-form-item__label:before {
+  content: "*";
+  color: #f56c6c;
+  margin-right: 4px;
+}
+
+.vue-form-item__label {
+  text-align: right;
+  font-size: 14px;
+  color: #606266;
+  padding-right: 12px;
+  height: var(--lineHeight);
+  line-height: var(--lineHeight);
+  box-sizing: border-box;
+}
+
+.vue-form-item__content {
+  width: 100%;
+  position: relative;
+  line-height: var(--lineHeight);
+  font-size: 14px;
+}
+
+.vue-form-item__content::before,
+.vue-form-item__content::after {
+  display: table;
+  content: "";
+}
+
+.vue-form-item__content:after {
+  clear: both;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+}
+
+.vue-form--label-left .vue-form-item__label {
+  text-align: left;
+}
+
+.vue-form--label-right .vue-form-item__label {
+  text-align: right;
+}
+
+.vue-form--label-top .vue-form-item {
+  display: block;
+}
+
+.vue-form--label-top .vue-form-item__label {
+  text-align: left;
+  padding-right: 0;
+  padding-bottom: 10px;
+}
+
+.vue-layer {
+  width: 100%;
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: row;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+}
+
+.vue-layer__reference {
+  width: 100%;
+}
+
+.vue-text {
+  position: relative;
+  width: 100%;
+}
+
+.vue-popover__reference-function {
+  font-size: 16px;
+  margin: 5px 5px 0;
+}
+
+.vue-popover {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  position: fixed;
+  z-index: 3000;
+  padding: 10px;
+  line-height: 1.2;
+  font-size: 14px;
+  min-width: 10px;
+  border-radius: 4px;
+  border: 1px solid;
+  background-color: var(--bgColor);
+  border-color: var(--borderColor);
+  color: var(--color);
+}
+
+.vue-popover--visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.vue-popover--hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.vue-popover__arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+}
+
+.vue-popover__arrow:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+}
+
+.vue-popover__top .vue-popover__arrow {
+  border-top-color: var(--borderColor);
+  margin-left: -6px;
+  left: 50%;
+  top: 100%;
+}
+
+.vue-popover__top .vue-popover__arrow:after {
+  top: -6px;
+  margin-left: -5px;
+  border-top: 5px solid var(--bgColor);
+}
+
+.vue-popover__right .vue-popover__arrow {
+  border-right-color: var(--borderColor);
+  margin-top: -6px;
+  left: -12px;
+  top: 50%;
+}
+
+.vue-popover__right .vue-popover__arrow:after {
+  left: -3px;
+  margin-top: -5px;
+  border-right: 5px solid var(--bgColor);
+}
+
+.vue-popover__bottom .vue-popover__arrow {
+  border-bottom-color: var(--borderColor);
+  margin-left: -6px;
+  top: -12px;
+  left: 50%;
+}
+
+.vue-popover__bottom .vue-popover__arrow:after {
+  top: -3px;
+  margin-left: -5px;
+  border-bottom: 5px solid var(--bgColor);
+}
+
+.vue-popover__left .vue-popover__arrow {
+  border-left-color: var(--borderColor);
+  margin-top: -6px;
+  left: 100%;
+  top: 50%;
+}
+
+.vue-popover__left .vue-popover__arrow:after {
+  right: -3px;
+  margin-top: -5px;
+  border-left: 5px solid var(--bgColor);
+}
+
+.vue-text-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  line-height: 1;
+  color: #666;
+  font-size: 12px;
+}
+
+.vue-text-content.vue-text__bottom {
+  top: 100%;
+  left: 0;
+  padding-top: 4px;
+}
+
+.vue-text-content.vue-text__right,
+.vue-text-content.vue-text__left {
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
+.vue-col {
+  float: left;
+}
