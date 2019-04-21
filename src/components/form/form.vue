@@ -5,8 +5,7 @@
 </template>
 
 <script>
-import { on, off } from "../../utils/dom";
-import { clone } from "../../utils/util";
+import { on, off } from "utils/dom";
 
 export default {
   name: "VueForm",

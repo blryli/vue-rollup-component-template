@@ -1,6 +1,6 @@
 import {
   getDomClientRect
-} from "../../utils/dom";
+} from "utils/dom";
 
 function $(params) {
   return document.getElementById(params);

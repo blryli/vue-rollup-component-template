@@ -41,10 +41,3 @@ export default {
   methods: {}
 };
 </script>
-
-<style>
-.vue-col{
-  color: red;
-}
-</style>
-

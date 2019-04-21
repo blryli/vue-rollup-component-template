@@ -1,8 +1,2 @@
-import Layer from './layer.vue';
-
-/* istanbul ignore next */
-Layer.install = function(Vue) {
-  Vue.component(Layer.name, Layer);
-};
-
+import Layer from './layer';
 export default Layer;

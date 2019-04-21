@@ -1,30 +1,33 @@
 import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
+import replace from 'rollup-plugin-replace'
+import sass from 'rollup-plugin-sass'
 import vue from 'rollup-plugin-vue'
-
-import fs from 'fs'
-import CleanCSS from 'clean-css'
-
-const extensions = [
-  '.js', '.jsx', '.ts', '.tsx',
-]
 
 export default {
   input: 'src/index.js',
   plugins: [
-    resolve({
-      extensions
-    }),
+    resolve({ extensions: ['.vue'] }),
     commonjs(),
-    babel({ extensions, include: ['src/**/*'], runtimeHelpers: true }),
-    vue({
-      css(style) {
-        fs.writeFileSync('dist/vue-form-layer.css', new CleanCSS().minify(style).styles)
-      },
-    })
+    sass({
+      output: 'lib/vue-form-layer.css'
+    }),
+    vue({ css: false }),
+    babel({
+      "plugins": [
+        [
+          "module-resolver",
+          {
+            "root": ["src/"],
+          }
+        ]
+      ]
+    }),
+    replace({ 'process.env.NODE_ENV': JSON.stringify('development') }),
   ],
-  external: [
-    'vue',
-  ],
+  watch: {
+    include: 'src/**',
+  },
+  external: ['vue'],
 }

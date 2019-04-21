@@ -1,5 +1,5 @@
 <script>
-import { generateId } from "../../utils/util";
+import { generateId } from "utils/util";
 export default {
   name: "VueLayer",
   props: {

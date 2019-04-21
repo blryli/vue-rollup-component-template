@@ -1,8 +1,8 @@
 <script>
-import { offset, scroll, generateId } from "../../utils/util";
-import VueFormItem from "../form-item/form-item.vue";
-import VueLayer from "../layer/layer.vue";
-import VueCol from "../col/col.vue";
+import { offset, scroll, generateId } from "utils/util";
+import VueFormItem from "components/form-item/form-item.vue";
+import VueLayer from "components/layer/layer.vue";
+import VueCol from "components/col/col.vue";
 export default {
   name: "VueFormLine",
   components: {

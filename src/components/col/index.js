@@ -1,8 +1,2 @@
-import vueCol from './col.vue';
-
-/* istanbul ignore next */
-vueCol.install = function(Vue) {
-  Vue.component(vueCol.name, vueCol);
-};
-
+import vueCol from './col';
 export default vueCol;

@@ -1,8 +1,2 @@
-import VueFormLine from './form-line.vue';
-
-/* istanbul ignore next */
-VueFormLine.install = function(Vue) {
-  Vue.component(VueFormLine.name, VueFormLine);
-};
-
+import VueFormLine from './form-line';
 export default VueFormLine;

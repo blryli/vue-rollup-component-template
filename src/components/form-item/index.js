@@ -1,8 +1,2 @@
-import vueFormItem from './form-item.vue';
-
-/* istanbul ignore next */
-vueFormItem.install = function(Vue) {
-  Vue.component(vueFormItem.name, vueFormItem);
-};
-
+import vueFormItem from './form-item';
 export default vueFormItem;

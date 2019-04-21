@@ -1,8 +1,2 @@
-import RenderSlot from './render-slot.vue';
-
-/* istanbul ignore next */
-RenderSlot.install = function(Vue) {
-  Vue.component(RenderSlot.name, RenderSlot);
-};
-
+import RenderSlot from './render-slot';
 export default RenderSlot;

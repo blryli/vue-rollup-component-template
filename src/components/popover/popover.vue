@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import Content from '../content/content.vue'
-import { offset, scroll, debounce } from "../../utils/util";
+import Content from '../content/content'
+import { offset, scroll, debounce } from "utils/util";
 import {
   on,
   off,
@@ -18,7 +18,7 @@ import {
   enableEventListener,
   removeEventListener,
   getDomClientRect
-} from "../../utils/dom";
+} from "utils/dom";
 import Mixin from "./mixin";
 
 export default {

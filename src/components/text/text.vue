@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Content from '../content/content.vue'
+import Content from '../content/content'
 export default {
   name: "VueText",
   components: {Content},
