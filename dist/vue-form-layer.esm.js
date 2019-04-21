@@ -471,12 +471,6 @@ __vue_render__._withStripped = true;
     undefined
   );
 
-/* istanbul ignore next */
-
-vueForm.install = function (Vue) {
-  Vue.component(vueForm.name, vueForm);
-};
-
 var generateId = function generateId() {
   return Math.floor(Math.random() * 10000);
 };
@@ -614,248 +608,15 @@ __vue_render__$1._withStripped = true;
   );
 
 var script$2 = {
-  name: "VueLayer",
-  props: {
-    prop: String,
-    layer: {
-      type: Array,
-      default: function _default() {
-        return [];
-      }
-    }
-  },
-
-  data() {
-    return {
-      betraye: {
-        left: [],
-        right: [],
-        top: [],
-        bottom: []
-      },
-      addLayer: false,
-      layerData: Object.freeze(this.layer),
-      resetLayerData: Object.freeze(JSON.parse(JSON.stringify(this.layer)))
-    };
-  },
-
-  computed: {
-    form() {
-      var parent = this.$parent;
-      var parentName = parent.$options.name;
-
-      while (parentName !== "VueForm") {
-        parent = parent.$parent;
-        parentName = parent.$options.name;
-      }
-
-      return parent;
-    }
-
-  },
+  name: "VueContent",
+  props: ["data"],
 
   render(h) {
-    var defaultReferenceId = `${generateId()}${this.prop}/default`;
-    var referenceNode = h("div", {
+    return h('div', {
       attrs: {
-        id: defaultReferenceId,
-        class: {
-          "vue-layer__reference": true
-        }
+        class: 'vue-layer__content'
       }
-    }, [this.$slots.default[0]]);
-    var placementObj = {
-      left: [],
-      right: [],
-      top: [],
-      bottom: []
-    };
-    var layers = [];
-
-    for (var i = 0, len = (this.layerData || []).length; i < len; i++) {
-      var d = this.layerData[i];
-      var referenceId = `${generateId()}${this.prop}/${i}`; // 参考点id
-
-      var data = typeof d.template === "function" ? d.template(d.data, this.prop) : d.data; // 展示内容
-
-      if (!d.type || d.type === "popover") {
-        var placement = d.placement || "top"; // 默认展示位置
-
-        var disabled = d.disabled === true || d.show === false ? 1 : 0; // 是否禁用
-
-        var placementId = `${defaultReferenceId}/${placement}/${placementObj[placement].length + 1}`;
-
-        if (typeof d.reference === "function") {
-          layers.push(h("div", {
-            attrs: {
-              id: referenceId,
-              class: {
-                "vue-popover__reference-function": true
-              }
-            }
-          }, [d.reference()]));
-          placementId = "";
-        } else {
-          referenceId = defaultReferenceId;
-          placementObj[placement].push({
-            id: placementId,
-            disabled: disabled
-          });
-        } // 图层懒加载
-
-
-        (d.showAlways || this.addLayer) && layers.push(h("vue-popover", {
-          attrs: {
-            referenceId: referenceId,
-            placementId: placementId,
-            data: data,
-            placement: placement,
-            disabled: disabled,
-            trigger: d.trigger,
-            effect: d.effect,
-            visibleArrow: d.visibleArrow,
-            order: d.order,
-            borderColor: d.borderColor,
-            showAlways: d.showAlways,
-            enterable: d.enterable,
-            popoverClass: d.popoverClass,
-            hideDelay: d.hideDelay,
-            prop: this.prop,
-            betraye: this.betraye,
-            placementObj: this.placementObj,
-            onAddBetrayer: this.addBetrayer,
-            onRemoveBetrayer: this.removeBetrayer
-          }
-        }));
-      } else if (d.type === "text") {
-        referenceNode = h("div", {
-          attrs: {
-            id: referenceId,
-            class: {
-              "vue-text": true
-            }
-          }
-        }, [referenceNode]);
-        layers.push(h("vue-text", {
-          attrs: {
-            referenceId: referenceId,
-            data: data,
-            placement: d.placement,
-            disabled: d.disabled,
-            effect: d.effect
-          }
-        }));
-      }
-    }
-
-    return h("div", {
-      attrs: {
-        onMouseenter: this.layerLoad,
-        class: {
-          "vue-layer": true
-        }
-      }
-    }, [referenceNode, layers]);
-  },
-
-  methods: {
-    // 计算叛逆列表
-    addBetrayer(betrayer) {
-      betrayer.id && !this.betraye[betrayer.placement].find(function (d) {
-        return d === betrayer.id;
-      }) && this.betraye[betrayer.placement].push(betrayer.id);
-    },
-
-    removeBetrayer(betrayer) {
-      var index = this.betraye[betrayer.placement].findIndex(function (d) {
-        return d === betrayer.id;
-      });
-      index !== -1 && this.betraye[betrayer.placement].splice(index, 1);
-    },
-
-    // 加载图层
-    layerLoad() {
-      if (!this.addLayer) {
-        this.addLayer = true;
-      }
-    },
-
-    changeShow(id) {
-      this.layerData.forEach(function (d) {
-        d.id === id && (d.show = !d.show);
-      });
-    },
-
-    recalculateField(id, prop) {
-      var _this = this;
-
-      this.layerLoad();
-      this.layerData = Object.freeze(this.layerData.map(function (d) {
-        if (d.id !== id || !d.recalculate || prop && _this.prop !== prop) return d;
-        typeof d.recalculate !== "function" && console.error(`recalculate 必须是 function`); // 获取 value
-
-        var p = prop || _this.prop;
-        var key = p.substring(p.lastIndexOf("/") + 1);
-        var value = Array.isArray(_this.form.model) ? _this.form.model[p.split("/")[p.split("/").length - 2] * 1][key] : _this.form.model[key] || _this.$set(_this.form.model, key, ""); // 获取重算返回对象
-
-        var cb = d.recalculate(value) || null;
-        d.data = cb.message;
-        d.referenceBorderColor = cb.referenceBorderColor;
-        d.disabled = cb.disabled;
-
-        if (typeof cb === "object") {
-          Array.isArray(cb) && console.error("recalculate 返回值必须是 object");
-        } else {
-          console.error("recalculate 返回值必须是 object");
-        }
-
-        _this.updateSlot(d.referenceBorderColor);
-
-        _this.form.recalculateEmit({
-          id: d.id,
-          prop: _this.prop,
-          data: d.data
-        });
-
-        return d;
-      }));
-    },
-
-    clearCalculate(id) {
-      var _this2 = this;
-
-      var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-      var resetModel = arguments.length > 2 ? arguments[2] : undefined;
-      this.layerData = Object.freeze(this.layerData.map(function (d, i) {
-        if (d.id !== id) return d;
-        var resetObj = _this2.resetLayerData[i];
-
-        if (props.length && props.find(function (prop) {
-          return prop === _this2.prop;
-        }) || !props.length) {
-          _this2.updateSlot(_this2.resetLayerData[i].referenceBorderColor);
-
-          resetModel && _this2.form.resetData(_this2.prop.substring(_this2.prop.lastIndexOf("/") + 1));
-          d.data = resetObj.data;
-          d.referenceBorderColor = resetObj.referenceBorderColor;
-          d.disabled = resetObj.disabled;
-          return d;
-        }
-      }));
-    },
-
-    updateSlot(referenceBorderColor) {
-      this.$children[0].update(referenceBorderColor);
-    }
-
-  },
-
-  mounted() {
-    // console.log(this.$children[0])
-    this.$emit.apply(this.form, ["layer.add", {
-      prop: this.prop,
-      layer: this
-    }]);
+    }, [this.data]);
   }
 
 };
@@ -879,355 +640,13 @@ const __vue_script__$2 = script$2;
   
 
   
-  var Layer = normalizeComponent_1(
+  var Content = normalizeComponent_1(
     {},
     __vue_inject_styles__$2,
     __vue_script__$2,
     __vue_scope_id__$2,
     __vue_is_functional_template__$2,
     __vue_module_identifier__$2,
-    undefined,
-    undefined
-  );
-
-//
-//
-//
-//
-//
-//
-var script$3 = {
-  name: "VueCol",
-  props: {
-    span: Number
-  },
-
-  data() {
-    return {};
-  },
-
-  computed: {
-    style() {
-      var style = {};
-
-      if (this.gutter) {
-        style.paddingLeft = this.gutter / 2 + "px";
-        style.paddingRight = style.paddingLeft;
-      }
-
-      if (this.span) {
-        style.width = Math.floor(this.span / 24 * 100 * 10000) / 10000 + "%";
-      } else {
-        style.width = '100%';
-      }
-
-      return style;
-    },
-
-    gutter() {
-      var parent = this.$parent;
-
-      while (parent && parent.$options.name !== "VueRow") {
-        parent = parent.$parent;
-      }
-
-      return parent ? parent.gutter : 0;
-    }
-
-  },
-  methods: {}
-};
-
-/* script */
-const __vue_script__$3 = script$3;
-
-/* template */
-var __vue_render__$2 = function() {
-  var _vm = this;
-  var _h = _vm.$createElement;
-  var _c = _vm._self._c || _h;
-  return _c(
-    "div",
-    { staticClass: "vue-col", style: _vm.style },
-    [_vm._t("default")],
-    2
-  )
-};
-var __vue_staticRenderFns__$2 = [];
-__vue_render__$2._withStripped = true;
-
-  /* style */
-  const __vue_inject_styles__$3 = undefined;
-  /* scoped */
-  const __vue_scope_id__$3 = undefined;
-  /* module identifier */
-  const __vue_module_identifier__$3 = undefined;
-  /* functional template */
-  const __vue_is_functional_template__$3 = false;
-  /* style inject */
-  
-  /* style inject SSR */
-  
-
-  
-  var vueCol = normalizeComponent_1(
-    { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 },
-    __vue_inject_styles__$3,
-    __vue_script__$3,
-    __vue_scope_id__$3,
-    __vue_is_functional_template__$3,
-    __vue_module_identifier__$3,
-    undefined,
-    undefined
-  );
-
-var script$4 = {
-  name: "VueFormLine",
-  components: {
-    VueFormItem: vueFormItem,
-    VueLayer: Layer,
-    VueCol: vueCol
-  },
-  props: {
-    cols: {
-      type: Array,
-      default: function _default() {
-        return [];
-      }
-    },
-    label: String,
-    required: Boolean,
-    span: {
-      type: Number,
-      default: 24
-    },
-    labelWidth: String
-  },
-  computed: {
-    form() {
-      var parent = this.$parent;
-      var parentName = parent.$options.name;
-
-      while (parentName !== "VueForm") {
-        parent = parent.$parent;
-        parentName = parent.$options.name;
-      }
-
-      return parent;
-    },
-
-    // 间距
-    itemGutter() {
-      return this.form.itemGutter / 2;
-    },
-
-    // 响应式
-    isResponse() {
-      return this.form.isResponse;
-    }
-
-  },
-
-  render(h) {
-    var _this = this;
-
-    // 获取节点
-    var slotNodes = this.$slots.default.filter(function (d, i) {
-      return _this.$slots.default[i].tag;
-    });
-    var nodes = []; // form-line 实际插入的节点
-
-    var abreastSlotNodes = []; // form-item 内并排节点
-    // form-line 节点处理
-
-    (slotNodes || []).forEach(function (slotNode, index) {
-      var remainSpace = 24;
-      var remainNodeNum = slotNodes.length;
-      (_this.cols || []).forEach(function (d) {
-        if (d.span) {
-          remainSpace -= d.span;
-          remainNodeNum--;
-        }
-      });
-      var span, label, labelWidth, prop, required;
-
-      if (_this.cols && _this.cols.length && _this.cols[index]) {
-        span = _this.cols[index].span || remainSpace / remainNodeNum;
-        label = _this.cols[index].label || "";
-        labelWidth = _this.cols[index].labelWidth || _this.labelWidth || _this.form.labelWidth || "80px";
-        prop = _this.cols[index].prop || "";
-        required = _this.cols[index].required || false;
-      } else {
-        span = remainSpace / remainNodeNum;
-      }
-
-      _this.isResponse && (span = 24);
-
-      var layerRow = _this.form.initLayer.find(function (d) {
-        return d.prop === prop;
-      });
-
-      var hasColor = layerRow && (layerRow.layer || []).find(function (l) {
-        return l.referenceBorderColor;
-      });
-      var referenceBorderColor = hasColor && hasColor.referenceBorderColor;
-      slotNode = h("render-slot", {
-        attrs: {
-          slotNode: slotNode,
-          referenceBorderColor: referenceBorderColor
-        }
-      }); // 图层分发到 slotNode
-
-      layerRow && (slotNode = h("vue-layer", {
-        attrs: {
-          layer: layerRow.layer,
-          prop: layerRow.prop
-        }
-      }, [slotNode])); // slotNode 分发
-
-      if (!_this.label) {
-        // 基本布局
-        nodes.push(h("vue-col", {
-          attrs: {
-            slotNode: slotNode,
-            style: {
-              padding: `0 ${_this.itemGutter}px`
-            }
-          }
-        }, [h("vue-form-item", {
-          attrs: {
-            label: label,
-            labelWidth: labelWidth,
-            required: required
-          }
-        }, [slotNode])]));
-      } else {
-        // 并列布局
-        abreastSlotNodes.push([h("vue-col", {
-          attrs: {
-            span: span,
-            class: {
-              "form-line--abreast": true
-            }
-          }
-        }, [slotNode])]);
-      }
-    }); // 并列布局添加节点
-
-    if (this.label) {
-      nodes.push(h("vue-form-item", {
-        attrs: {
-          label: this.label,
-          labelWidth: this.labelWidth || "80px",
-          required: this.required,
-          style: {
-            padding: `0 ${this.itemGutter}px`
-          }
-        }
-      }, [abreastSlotNodes]));
-    }
-
-    var span = this.isResponse ? 24 : this.span;
-    return h("vue-col", {
-      attrs: {
-        span: span,
-        class: {
-          "form-line--abreast": true
-        }
-      }
-    }, [h("div", {
-      attrs: {
-        class: {
-          "vue-form-line": true
-        }
-      }
-    })]);
-  }
-
-};
-
-/* script */
-const __vue_script__$4 = script$4;
-
-/* template */
-
-  /* style */
-  const __vue_inject_styles__$4 = undefined;
-  /* scoped */
-  const __vue_scope_id__$4 = undefined;
-  /* module identifier */
-  const __vue_module_identifier__$4 = undefined;
-  /* functional template */
-  const __vue_is_functional_template__$4 = undefined;
-  /* style inject */
-  
-  /* style inject SSR */
-  
-
-  
-  var VueFormLine = normalizeComponent_1(
-    {},
-    __vue_inject_styles__$4,
-    __vue_script__$4,
-    __vue_scope_id__$4,
-    __vue_is_functional_template__$4,
-    __vue_module_identifier__$4,
-    undefined,
-    undefined
-  );
-
-/* istanbul ignore next */
-
-VueFormLine.install = function (Vue) {
-  Vue.component(VueFormLine.name, VueFormLine);
-};
-
-/* istanbul ignore next */
-
-vueFormItem.install = function (Vue) {
-  Vue.component(vueFormItem.name, vueFormItem);
-};
-
-var script$5 = {
-  name: "VueContent",
-  props: ["data"],
-
-  render(h) {
-    return h('div', {
-      attrs: {
-        class: 'vue-layer__content'
-      }
-    }, [this.data]);
-  }
-
-};
-
-/* script */
-const __vue_script__$5 = script$5;
-
-/* template */
-
-  /* style */
-  const __vue_inject_styles__$5 = undefined;
-  /* scoped */
-  const __vue_scope_id__$5 = undefined;
-  /* module identifier */
-  const __vue_module_identifier__$5 = undefined;
-  /* functional template */
-  const __vue_is_functional_template__$5 = undefined;
-  /* style inject */
-  
-  /* style inject SSR */
-  
-
-  
-  var Content = normalizeComponent_1(
-    {},
-    __vue_inject_styles__$5,
-    __vue_script__$5,
-    __vue_scope_id__$5,
-    __vue_is_functional_template__$5,
-    __vue_module_identifier__$5,
     undefined,
     undefined
   );
@@ -1424,11 +843,11 @@ var Mixin = {
 };
 
 //
-var script$6 = {
+var script$3 = {
   name: "VuePopover",
   mixins: [Mixin],
   components: {
-    Content
+    VueContent: Content
   },
   props: {
     referenceId: String,
@@ -1706,10 +1125,10 @@ var script$6 = {
 };
 
 /* script */
-const __vue_script__$6 = script$6;
+const __vue_script__$3 = script$3;
 
 /* template */
-var __vue_render__$3 = function() {
+var __vue_render__$2 = function() {
   var _vm = this;
   var _h = _vm.$createElement;
   var _c = _vm._self._c || _h;
@@ -1735,17 +1154,17 @@ var __vue_render__$3 = function() {
     )
   ])
 };
-var __vue_staticRenderFns__$3 = [];
-__vue_render__$3._withStripped = true;
+var __vue_staticRenderFns__$2 = [];
+__vue_render__$2._withStripped = true;
 
   /* style */
-  const __vue_inject_styles__$6 = undefined;
+  const __vue_inject_styles__$3 = undefined;
   /* scoped */
-  const __vue_scope_id__$6 = undefined;
+  const __vue_scope_id__$3 = undefined;
   /* module identifier */
-  const __vue_module_identifier__$6 = undefined;
+  const __vue_module_identifier__$3 = undefined;
   /* functional template */
-  const __vue_is_functional_template__$6 = false;
+  const __vue_is_functional_template__$3 = false;
   /* style inject */
   
   /* style inject SSR */
@@ -1753,39 +1172,21 @@ __vue_render__$3._withStripped = true;
 
   
   var VuePopover = normalizeComponent_1(
-    { render: __vue_render__$3, staticRenderFns: __vue_staticRenderFns__$3 },
-    __vue_inject_styles__$6,
-    __vue_script__$6,
-    __vue_scope_id__$6,
-    __vue_is_functional_template__$6,
-    __vue_module_identifier__$6,
+    { render: __vue_render__$2, staticRenderFns: __vue_staticRenderFns__$2 },
+    __vue_inject_styles__$3,
+    __vue_script__$3,
+    __vue_scope_id__$3,
+    __vue_is_functional_template__$3,
+    __vue_module_identifier__$3,
     undefined,
     undefined
   );
 
-/* istanbul ignore next */
-
-VuePopover.install = function (Vue) {
-  Vue.component(VuePopover.name, VuePopover);
-};
-
-/* istanbul ignore next */
-
-vueCol.install = function (Vue) {
-  Vue.component(vueCol.name, vueCol);
-};
-
-/* istanbul ignore next */
-
-Content.install = function (Vue) {
-  Vue.component(Content.name, Content);
-};
-
 //
-var script$7 = {
+var script$4 = {
   name: "VueText",
   components: {
-    Content
+    VueContent: Content
   },
   props: {
     referenceId: String,
@@ -1846,10 +1247,10 @@ var script$7 = {
 };
 
 /* script */
-const __vue_script__$7 = script$7;
+const __vue_script__$4 = script$4;
 
 /* template */
-var __vue_render__$4 = function() {
+var __vue_render__$3 = function() {
   var _vm = this;
   var _h = _vm.$createElement;
   var _c = _vm._self._c || _h;
@@ -1869,17 +1270,17 @@ var __vue_render__$4 = function() {
     attrs: { data: _vm.data }
   })
 };
-var __vue_staticRenderFns__$4 = [];
-__vue_render__$4._withStripped = true;
+var __vue_staticRenderFns__$3 = [];
+__vue_render__$3._withStripped = true;
 
   /* style */
-  const __vue_inject_styles__$7 = undefined;
+  const __vue_inject_styles__$4 = undefined;
   /* scoped */
-  const __vue_scope_id__$7 = undefined;
+  const __vue_scope_id__$4 = undefined;
   /* module identifier */
-  const __vue_module_identifier__$7 = undefined;
+  const __vue_module_identifier__$4 = undefined;
   /* functional template */
-  const __vue_is_functional_template__$7 = false;
+  const __vue_is_functional_template__$4 = false;
   /* style inject */
   
   /* style inject SSR */
@@ -1887,29 +1288,391 @@ __vue_render__$4._withStripped = true;
 
   
   var VueText = normalizeComponent_1(
-    { render: __vue_render__$4, staticRenderFns: __vue_staticRenderFns__$4 },
-    __vue_inject_styles__$7,
-    __vue_script__$7,
-    __vue_scope_id__$7,
-    __vue_is_functional_template__$7,
-    __vue_module_identifier__$7,
+    { render: __vue_render__$3, staticRenderFns: __vue_staticRenderFns__$3 },
+    __vue_inject_styles__$4,
+    __vue_script__$4,
+    __vue_scope_id__$4,
+    __vue_is_functional_template__$4,
+    __vue_module_identifier__$4,
     undefined,
     undefined
   );
 
-/* istanbul ignore next */
+var script$5 = {
+  name: "VueLayer",
+  components: {
+    VuePopover,
+    VueText
+  },
+  props: {
+    prop: String,
+    layer: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    }
+  },
 
-VueText.install = function (Vue) {
-  Vue.component(VueText.name, VueText);
+  data() {
+    return {
+      betraye: {
+        left: [],
+        right: [],
+        top: [],
+        bottom: []
+      },
+      addLayer: false,
+      layerData: Object.freeze(this.layer),
+      resetLayerData: Object.freeze(JSON.parse(JSON.stringify(this.layer)))
+    };
+  },
+
+  computed: {
+    form() {
+      var parent = this.$parent;
+      var parentName = parent.$options.name;
+
+      while (parentName !== "VueForm") {
+        parent = parent.$parent;
+        parentName = parent.$options.name;
+      }
+
+      return parent;
+    }
+
+  },
+
+  render(h) {
+    var defaultReferenceId = `${generateId()}${this.prop}/default`;
+    var referenceNode = h("div", {
+      attrs: {
+        id: defaultReferenceId
+      },
+      class: {
+        "vue-layer__reference": true
+      }
+    }, [this.$slots.default[0]]);
+    var placementObj = {
+      left: [],
+      right: [],
+      top: [],
+      bottom: []
+    };
+    var layers = [];
+
+    for (var i = 0, len = (this.layerData || []).length; i < len; i++) {
+      var d = this.layerData[i];
+      var referenceId = `${generateId()}${this.prop}/${i}`; // 参考点id
+
+      var data = typeof d.template === "function" ? d.template(d.data, this.prop) : d.data; // 展示内容
+
+      if (!d.type || d.type === "popover") {
+        var placement = d.placement || "top"; // 默认展示位置
+
+        var disabled = d.disabled === true || d.show === false ? 1 : 0; // 是否禁用
+
+        var placementId = `${defaultReferenceId}/${placement}/${placementObj[placement].length + 1}`;
+
+        if (typeof d.reference === "function") {
+          layers.push(h("div", {
+            attrs: {
+              id: referenceId
+            },
+            class: {
+              "vue-popover__reference-function": true
+            }
+          }, [d.reference()]));
+          placementId = "";
+        } else {
+          referenceId = defaultReferenceId;
+          placementObj[placement].push({
+            id: placementId,
+            disabled: disabled
+          });
+        } // 图层懒加载
+
+
+        (d.showAlways || this.addLayer) && layers.push(h("vue-popover", {
+          attrs: {
+            referenceId: referenceId,
+            placementId: placementId,
+            data: data,
+            placement: placement,
+            disabled: disabled,
+            trigger: d.trigger,
+            effect: d.effect,
+            visibleArrow: d.visibleArrow,
+            order: d.order,
+            borderColor: d.borderColor,
+            showAlways: d.showAlways,
+            enterable: d.enterable,
+            popoverClass: d.popoverClass,
+            hideDelay: d.hideDelay,
+            prop: this.prop,
+            betraye: this.betraye,
+            placementObj: placementObj
+          },
+          on: {
+            addBetrayer: this.addBetrayer,
+            removeBetrayer: this.removeBetrayer
+          }
+        }));
+      } else if (d.type === "text") {
+        referenceNode = h("div", {
+          attrs: {
+            id: referenceId
+          },
+          class: {
+            "vue-text": true
+          }
+        }, [referenceNode]);
+        layers.push(h("vue-text", {
+          attrs: {
+            referenceId: referenceId,
+            data: data,
+            placement: d.placement,
+            disabled: d.disabled,
+            effect: d.effect
+          }
+        }));
+      }
+    }
+
+    return h("div", {
+      on: {
+        mouseenter: this.layerLoad
+      },
+      class: {
+        "vue-layer": true
+      }
+    }, [referenceNode, layers]);
+  },
+
+  methods: {
+    // 计算叛逆列表
+    addBetrayer(betrayer) {
+      betrayer.id && !this.betraye[betrayer.placement].find(function (d) {
+        return d === betrayer.id;
+      }) && this.betraye[betrayer.placement].push(betrayer.id);
+    },
+
+    removeBetrayer(betrayer) {
+      var index = this.betraye[betrayer.placement].findIndex(function (d) {
+        return d === betrayer.id;
+      });
+      index !== -1 && this.betraye[betrayer.placement].splice(index, 1);
+    },
+
+    // 加载图层
+    layerLoad() {
+      if (!this.addLayer) {
+        this.addLayer = true;
+      }
+    },
+
+    changeShow(id) {
+      this.layerData.forEach(function (d) {
+        d.id === id && (d.show = !d.show);
+      });
+    },
+
+    recalculateField(id, prop) {
+      var _this = this;
+
+      this.layerLoad();
+      this.layerData = Object.freeze(this.layerData.map(function (d) {
+        if (d.id !== id || !d.recalculate || prop && _this.prop !== prop) return d;
+        typeof d.recalculate !== "function" && console.error(`recalculate 必须是 function`); // 获取 value
+
+        var p = prop || _this.prop;
+        var key = p.substring(p.lastIndexOf("/") + 1);
+        var value = Array.isArray(_this.form.model) ? _this.form.model[p.split("/")[p.split("/").length - 2] * 1][key] : _this.form.model[key] || _this.$set(_this.form.model, key, ""); // 获取重算返回对象
+
+        var cb = d.recalculate(value) || null;
+        d.data = cb.message;
+        d.referenceBorderColor = cb.referenceBorderColor;
+        d.disabled = cb.disabled;
+
+        if (typeof cb === "object") {
+          Array.isArray(cb) && console.error("recalculate 返回值必须是 object");
+        } else {
+          console.error("recalculate 返回值必须是 object");
+        }
+
+        _this.updateSlot(d.referenceBorderColor);
+
+        _this.form.recalculateEmit({
+          id: d.id,
+          prop: _this.prop,
+          data: d.data
+        });
+
+        return d;
+      }));
+    },
+
+    clearCalculate(id) {
+      var _this2 = this;
+
+      var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+      var resetModel = arguments.length > 2 ? arguments[2] : undefined;
+      this.layerData = Object.freeze(this.layerData.map(function (d, i) {
+        if (d.id !== id) return d;
+        var resetObj = _this2.resetLayerData[i];
+
+        if (props.length && props.find(function (prop) {
+          return prop === _this2.prop;
+        }) || !props.length) {
+          _this2.updateSlot(_this2.resetLayerData[i].referenceBorderColor);
+
+          resetModel && _this2.form.resetData(_this2.prop.substring(_this2.prop.lastIndexOf("/") + 1));
+          d.data = resetObj.data;
+          d.referenceBorderColor = resetObj.referenceBorderColor;
+          d.disabled = resetObj.disabled;
+          return d;
+        }
+      }));
+    },
+
+    updateSlot(referenceBorderColor) {
+      this.$children[0].update(referenceBorderColor);
+    }
+
+  },
+
+  mounted() {
+    // console.log(this.$children[0])
+    this.$emit.apply(this.form, ["layer.add", {
+      prop: this.prop,
+      layer: this
+    }]);
+  }
+
 };
 
-/* istanbul ignore next */
+/* script */
+const __vue_script__$5 = script$5;
 
-Layer.install = function (Vue) {
-  Vue.component(Layer.name, Layer);
+/* template */
+
+  /* style */
+  const __vue_inject_styles__$5 = undefined;
+  /* scoped */
+  const __vue_scope_id__$5 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$5 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$5 = undefined;
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var Layer = normalizeComponent_1(
+    {},
+    __vue_inject_styles__$5,
+    __vue_script__$5,
+    __vue_scope_id__$5,
+    __vue_is_functional_template__$5,
+    __vue_module_identifier__$5,
+    undefined,
+    undefined
+  );
+
+//
+//
+//
+//
+//
+//
+var script$6 = {
+  name: "VueCol",
+  props: {
+    span: Number
+  },
+
+  data() {
+    return {};
+  },
+
+  computed: {
+    style() {
+      var style = {};
+
+      if (this.gutter) {
+        style.paddingLeft = this.gutter / 2 + "px";
+        style.paddingRight = style.paddingLeft;
+      }
+
+      if (this.span) {
+        style.width = Math.floor(this.span / 24 * 100 * 10000) / 10000 + "%";
+      } else {
+        style.width = '100%';
+      }
+
+      return style;
+    },
+
+    gutter() {
+      var parent = this.$parent;
+
+      while (parent && parent.$options.name !== "VueRow") {
+        parent = parent.$parent;
+      }
+
+      return parent ? parent.gutter : 0;
+    }
+
+  },
+  methods: {}
 };
 
-var script$8 = {
+/* script */
+const __vue_script__$6 = script$6;
+
+/* template */
+var __vue_render__$4 = function() {
+  var _vm = this;
+  var _h = _vm.$createElement;
+  var _c = _vm._self._c || _h;
+  return _c(
+    "div",
+    { staticClass: "vue-col", style: _vm.style },
+    [_vm._t("default")],
+    2
+  )
+};
+var __vue_staticRenderFns__$4 = [];
+__vue_render__$4._withStripped = true;
+
+  /* style */
+  const __vue_inject_styles__$6 = undefined;
+  /* scoped */
+  const __vue_scope_id__$6 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$6 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$6 = false;
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var vueCol = normalizeComponent_1(
+    { render: __vue_render__$4, staticRenderFns: __vue_staticRenderFns__$4 },
+    __vue_inject_styles__$6,
+    __vue_script__$6,
+    __vue_scope_id__$6,
+    __vue_is_functional_template__$6,
+    __vue_module_identifier__$6,
+    undefined,
+    undefined
+  );
+
+var script$7 = {
   name: "RenderSlot",
   componentName: "RenderSlot",
   props: ["slotNode", "referenceBorderColor"],
@@ -1993,6 +1756,200 @@ var script$8 = {
 };
 
 /* script */
+const __vue_script__$7 = script$7;
+
+/* template */
+
+  /* style */
+  const __vue_inject_styles__$7 = undefined;
+  /* scoped */
+  const __vue_scope_id__$7 = undefined;
+  /* module identifier */
+  const __vue_module_identifier__$7 = undefined;
+  /* functional template */
+  const __vue_is_functional_template__$7 = undefined;
+  /* style inject */
+  
+  /* style inject SSR */
+  
+
+  
+  var RenderSlot = normalizeComponent_1(
+    {},
+    __vue_inject_styles__$7,
+    __vue_script__$7,
+    __vue_scope_id__$7,
+    __vue_is_functional_template__$7,
+    __vue_module_identifier__$7,
+    undefined,
+    undefined
+  );
+
+var script$8 = {
+  name: "VueFormLine",
+  components: {
+    VueFormItem: vueFormItem,
+    VueLayer: Layer,
+    VueCol: vueCol,
+    RenderSlot
+  },
+  props: {
+    cols: {
+      type: Array,
+      default: function _default() {
+        return [];
+      }
+    },
+    label: String,
+    required: Boolean,
+    span: {
+      type: Number,
+      default: 24
+    },
+    labelWidth: String
+  },
+  computed: {
+    form() {
+      var parent = this.$parent;
+      var parentName = parent.$options.name;
+
+      while (parentName !== "VueForm") {
+        parent = parent.$parent;
+        parentName = parent.$options.name;
+      }
+
+      return parent;
+    },
+
+    // 间距
+    itemGutter() {
+      return this.form.itemGutter / 2;
+    },
+
+    // 响应式
+    isResponse() {
+      return this.form.isResponse;
+    }
+
+  },
+
+  render(h) {
+    var _this = this;
+
+    // 获取节点
+    var slotNodes = this.$slots.default.filter(function (d, i) {
+      return _this.$slots.default[i].tag;
+    });
+    var nodes = []; // form-line 实际插入的节点
+
+    var abreastSlotNodes = []; // form-item 内并排节点
+    // form-line 节点处理
+
+    (slotNodes || []).forEach(function (slotNode, index) {
+      var remainSpace = 24;
+      var remainNodeNum = slotNodes.length;
+      (_this.cols || []).forEach(function (d) {
+        if (d.span) {
+          remainSpace -= d.span;
+          remainNodeNum--;
+        }
+      });
+      var span, label, labelWidth, prop, required;
+
+      if (_this.cols && _this.cols.length && _this.cols[index]) {
+        span = _this.cols[index].span || remainSpace / remainNodeNum;
+        label = _this.cols[index].label || "";
+        labelWidth = _this.cols[index].labelWidth || _this.labelWidth || _this.form.labelWidth || "80px";
+        prop = _this.cols[index].prop || "";
+        required = _this.cols[index].required || false;
+      } else {
+        span = remainSpace / remainNodeNum;
+      }
+
+      _this.isResponse && (span = 24);
+
+      var layerRow = _this.form.initLayer.find(function (d) {
+        return d.prop === prop;
+      });
+
+      var hasColor = layerRow && (layerRow.layer || []).find(function (l) {
+        return l.referenceBorderColor;
+      });
+      var referenceBorderColor = hasColor && hasColor.referenceBorderColor;
+      slotNode = h("render-slot", {
+        attrs: {
+          slotNode: slotNode,
+          referenceBorderColor: referenceBorderColor
+        }
+      }); // 图层分发到 slotNode
+
+      layerRow && (slotNode = h("vue-layer", {
+        attrs: {
+          layer: layerRow.layer,
+          prop: layerRow.prop
+        }
+      }, [slotNode])); // slotNode 分发
+
+      if (!_this.label) {
+        // 基本布局
+        nodes.push(h("vue-col", {
+          attrs: {
+            span: span
+          },
+          style: {
+            padding: `0 ${_this.itemGutter}px`
+          }
+        }, [h("vue-form-item", {
+          attrs: {
+            label: label,
+            labelWidth: labelWidth,
+            required: required
+          }
+        }, [slotNode])]));
+      } else {
+        // 并列布局
+        abreastSlotNodes.push([h("vue-col", {
+          attrs: {
+            span: span
+          },
+          class: {
+            "form-line--abreast": true
+          }
+        }, [slotNode])]);
+      }
+    }); // 并列布局添加节点
+
+    if (this.label) {
+      nodes.push(h("vue-form-item", {
+        attrs: {
+          label: this.label,
+          labelWidth: this.labelWidth || "80px",
+          required: this.required
+        },
+        style: {
+          padding: `0 ${this.itemGutter}px`
+        }
+      }, [abreastSlotNodes]));
+    }
+
+    var span = this.isResponse ? 24 : this.span;
+    return h("vue-col", {
+      attrs: {
+        span: span
+      },
+      class: {
+        "form-line--abreast": true
+      }
+    }, [h("div", {
+      class: {
+        "vue-form-line": true
+      }
+    }, [nodes])]);
+  }
+
+};
+
+/* script */
 const __vue_script__$8 = script$8;
 
 /* template */
@@ -2011,7 +1968,7 @@ const __vue_script__$8 = script$8;
   
 
   
-  var RenderSlot = normalizeComponent_1(
+  var VueFormLine = normalizeComponent_1(
     {},
     __vue_inject_styles__$8,
     __vue_script__$8,
@@ -2022,13 +1979,7 @@ const __vue_script__$8 = script$8;
     undefined
   );
 
-/* istanbul ignore next */
-
-RenderSlot.install = function (Vue) {
-  Vue.component(RenderSlot.name, RenderSlot);
-};
-
-var components = [vueForm, VueFormLine, vueFormItem, VuePopover, vueCol, Content, VueText, Layer, RenderSlot];
+var components = [vueForm, VueFormLine];
 var plugin = {
   install(Vue) {
     components.forEach(function (component) {

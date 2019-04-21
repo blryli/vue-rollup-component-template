@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import Content from '../content/content'
+import VueContent from 'components/content'
 export default {
   name: "VueText",
-  components: {Content},
+  components: {VueContent},
   props: {
     referenceId: String,
     data: [String, Object, Array],

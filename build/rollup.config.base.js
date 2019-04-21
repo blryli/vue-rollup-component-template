@@ -11,7 +11,7 @@ export default {
     resolve({ extensions: ['.vue'] }),
     commonjs(),
     sass({
-      output: 'lib/vue-form-layer.css'
+      output: 'dist/vue-form-layer.css'
     }),
     vue({ css: false }),
     babel({

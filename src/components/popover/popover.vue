@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Content from '../content/content'
+import VueContent from 'components/content'
 import { offset, scroll, debounce } from "utils/util";
 import {
   on,
@@ -24,7 +24,7 @@ import Mixin from "./mixin";
 export default {
   name: "VuePopover",
   mixins: [Mixin],
-  components: {Content},
+  components: {VueContent},
   props: {
     referenceId: String,
     // 需要监听的事件

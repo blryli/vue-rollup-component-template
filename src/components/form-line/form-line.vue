@@ -1,14 +1,16 @@
 <script>
 import { offset, scroll, generateId } from "utils/util";
-import VueFormItem from "components/form-item/form-item.vue";
-import VueLayer from "components/layer/layer.vue";
-import VueCol from "components/col/col.vue";
+import VueFormItem from "components/form-item";
+import VueLayer from "components/layer";
+import VueCol from "components/col";
+import RenderSlot from "components/render-slot";
 export default {
   name: "VueFormLine",
   components: {
     VueFormItem,
     VueLayer,
-    VueCol
+    VueCol,
+    RenderSlot
   },
   props: {
     cols: {
@@ -107,10 +109,10 @@ export default {
             "vue-col",
             {
               attrs: {
-                slotNode: slotNode,
-                style: {
-                  padding: `0 ${this.itemGutter}px`
-                }
+                span: span,
+              },
+              style: {
+                padding: `0 ${this.itemGutter}px`
               }
             },
             [
@@ -136,8 +138,8 @@ export default {
             {
               attrs: {
                 span: span,
-                class: { "form-line--abreast": true }
-              }
+              },
+              class: { "form-line--abreast": true }
             },
             [slotNode]
           )
@@ -154,8 +156,8 @@ export default {
               label: this.label,
               labelWidth: this.labelWidth || "80px",
               required: this.required,
-              style: { padding: `0 ${this.itemGutter}px` }
-            }
+            },
+            style: { padding: `0 ${this.itemGutter}px` }
           },
           [abreastSlotNodes]
         )
@@ -167,10 +169,10 @@ export default {
       {
         attrs: {
           span: span,
-          class: { "form-line--abreast": true }
-        }
+        },
+        class: { "form-line--abreast": true }
       },
-      [h("div", { attrs: { class: { "vue-form-line": true } } })]
+      [h("div", { class: { "vue-form-line": true } }, [nodes])]
     );
   }
 };

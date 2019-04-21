@@ -1,7 +1,10 @@
 <script>
 import { generateId } from "utils/util";
+import VuePopover from "components/popover";
+import VueText from "components/text";
 export default {
   name: "VueLayer",
+  components: { VuePopover, VueText },
   props: {
     prop: String,
     layer: {
@@ -39,9 +42,9 @@ export default {
       "div",
       {
         attrs: {
-          id: defaultReferenceId,
-          class: { "vue-layer__reference": true }
-        }
+          id: defaultReferenceId
+        },
+        class: { "vue-layer__reference": true }
       },
       [this.$slots.default[0]]
     );
@@ -72,9 +75,9 @@ export default {
               "div",
               {
                 attrs: {
-                  id: referenceId,
-                  class: { "vue-popover__reference-function": true }
-                }
+                  id: referenceId
+                },
+                class: { "vue-popover__reference-function": true }
               },
               [d.reference()]
             )
@@ -108,9 +111,11 @@ export default {
                 hideDelay: d.hideDelay,
                 prop: this.prop,
                 betraye: this.betraye,
-                placementObj: this.placementObj,
-                onAddBetrayer: this.addBetrayer,
-                onRemoveBetrayer: this.removeBetrayer
+                placementObj: placementObj,
+              },
+              on: {
+                addBetrayer: this.addBetrayer,
+                removeBetrayer: this.removeBetrayer
               }
             })
           );
@@ -119,9 +124,9 @@ export default {
           "div",
           {
             attrs: {
-              id: referenceId,
-              class: { "vue-text": true }
-            }
+              id: referenceId
+            },
+            class: { "vue-text": true }
           },
           [referenceNode]
         );
@@ -142,10 +147,10 @@ export default {
     return h(
       "div",
       {
-        attrs: {
-          onMouseenter: this.layerLoad,
-          class: { "vue-layer": true }
-        }
+        on: {
+          mouseenter: this.layerLoad
+        },
+        class: { "vue-layer": true }
       },
       [referenceNode, layers]
     );
