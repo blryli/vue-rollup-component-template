@@ -1,6 +1,6 @@
 {
-  "name": "vue-form-layer-docs",
-  "description": "Docs for vue-form-layer",
+  "name": "vue-rollup-component-docs",
+  "description": "Docs for vue-rollup-component",
   "version": "1.0.0",
   "author": "blryli <405549416@qq.com>",
   "private": true,
@@ -10,8 +10,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "vue": "^2.5.17",
-    "element-ui": "^2.4.8"
+    "vue": "^2.5.17"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",

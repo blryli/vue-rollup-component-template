@@ -10,20 +10,9 @@ export default {
   plugins: [
     resolve({ extensions: ['.vue'] }),
     commonjs(),
-    sass({
-      output: 'dist/vue-form-layer.css'
-    }),
+    sass({ output: 'dist/vue-rollup-component.css' }),
     vue({ css: false }),
-    babel({
-      "plugins": [
-        [
-          "module-resolver",
-          {
-            "root": ["src/"],
-          }
-        ]
-      ]
-    }),
+    babel(),
     replace({ 'process.env.NODE_ENV': JSON.stringify('development') }),
   ],
   watch: {

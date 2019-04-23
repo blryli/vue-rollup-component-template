@@ -5,8 +5,8 @@ import base from './rollup.config.base'
 const config = Object.assign({}, base, {
   output: {
     exports: 'named',
-    name: 'VueFormLayer',
-    file: 'dist/vue-form-layer.min.js',
+    name: 'VueRollupComponent',
+    file: 'dist/vue-rollup-component.min.js',
     format: 'iife'
   },
 })

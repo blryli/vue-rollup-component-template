@@ -1,11 +1,9 @@
-import Form from 'components/form';
-import FormLine from 'components/form-line';
+import VueComponent from 'components/vue-component';
 
 import './scss/index.scss'
 
 const components = [
-  Form,
-  FormLine
+  VueComponent
 ];
 
 const plugin = {

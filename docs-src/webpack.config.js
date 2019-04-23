@@ -65,6 +65,7 @@ module.exports = {
     historyApiFallback: true,
     contentBase: path.join(__dirname, '..', 'docs'),
     disableHostCheck: true,
+    port: 7777,
   },
   performance: {
     hints: false,

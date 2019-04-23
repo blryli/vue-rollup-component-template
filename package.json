@@ -1,5 +1,5 @@
 {
-  "name": "vue-form-layer",
+  "name": "vue-rollup-component",
   "description": "Smooth scrolling for any amount of data",
   "version": "1.0.0",
   "author": {
@@ -9,28 +9,30 @@
   "keywords": [
     "vue",
     "vuejs",
-    "plugin"
+    "rollup",
+    "template",
+    "components"
   ],
   "license": "MIT",
-  "main": "dist/vue-form-layer.umd.js",
-  "module": "dist/vue-form-layer.esm.js",
-  "unpkg": "dist/vue-form-layer.min.js",
+  "main": "dist/vue-rollup-component.umd.js",
+  "module": "dist/vue-rollup-component.esm.js",
+  "unpkg": "dist/vue-rollup-component.min.js",
   "scripts": {
     "build": "npm run build:browser && npm run build:es && npm run build:umd",
     "build:browser": "rollup --config build/rollup.config.browser.js",
     "build:es": "rollup --config build/rollup.config.es.js",
     "build:umd": "rollup --config build/rollup.config.umd.js",
     "dev": "cross-env NODE_ENV=development rollup --config build/rollup.config.es.js --watch",
-    "es5": "babel dist -d lib"
+    "build:es5": "babel dist -d lib"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blryli/vue-form-layer.git"
+    "url": "git+https://github.com/blryli/vue-rollup-component.git"
   },
   "bugs": {
-    "url": "https://github.com/blryli/vue-form-layer/issues"
+    "url": "https://github.com/blryli/vue-rollup-component/issues"
   },
-  "homepage": "https://github.com/blryli/vue-form-layer#readme",
+  "homepage": "https://github.com/blryli/vue-rollup-component#readme",
   "peerDependencies": {
     "vue": "^2.6.10"
   },
