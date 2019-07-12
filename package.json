@@ -1,61 +1,50 @@
 {
-  "name": "vue-rollup-component",
-  "description": "Smooth scrolling for any amount of data",
+  "name": "vue-rollup-component-template",
   "version": "1.0.0",
-  "author": {
-    "name": "blryli",
-    "email": "405549416@qq.com"
-  },
-  "keywords": [
-    "vue",
-    "vuejs",
-    "rollup",
-    "template",
-    "components"
-  ],
-  "license": "MIT",
-  "main": "dist/vue-rollup-component.umd.js",
-  "module": "dist/vue-rollup-component.esm.js",
-  "unpkg": "dist/vue-rollup-component.min.js",
+  "description": "A rollup + vue component development template",
+  "main": "dist/vue-rollup-component-template.umd.js",
+  "module": "dist/vue-rollup-component-template.esm.js",
+  "unpkg": "dist/vue-rollup-component-template.min.js",
   "scripts": {
     "build": "npm run build:browser && npm run build:es && npm run build:umd",
     "build:browser": "rollup --config build/rollup.config.browser.js",
     "build:es": "rollup --config build/rollup.config.es.js",
     "build:umd": "rollup --config build/rollup.config.umd.js",
-    "dev": "cross-env NODE_ENV=development rollup --config build/rollup.config.es.js --watch",
-    "build:es5": "babel dist -d lib"
+    "dev": "cross-env NODE_ENV=development rollup --config build/rollup.config.es.js --watch"
   },
+  "keywords": [
+    "vue",
+    "vuejs",
+    "rollup",
+    "rollupjs",
+    "template",
+    "component"
+  ],
+  "author": "blryli",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blryli/vue-rollup-component.git"
+    "url": "git+https://github.com/blryli/vue-rollup-component-template.git"
   },
   "bugs": {
-    "url": "https://github.com/blryli/vue-rollup-component/issues"
+    "url": "https://github.com/blryli/vue-rollup-component-template/issues"
   },
-  "homepage": "https://github.com/blryli/vue-rollup-component#readme",
-  "peerDependencies": {
-    "vue": "^2.6.10"
-  },
+  "homepage": "https://github.com/blryli/vue-rollup-component-template#readme",
   "devDependencies": {
-    "@babel/cli": "^7.4.3",
-    "@babel/core": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
+    "babel-core": "^6.26.3",
     "babel-plugin-module-resolver": "^3.2.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "clean-css": "^4.2.1",
     "cross-env": "^5.2.0",
-    "rollup": "^1.10.0",
-    "rollup-plugin-babel": "^4.3.2",
-    "rollup-plugin-commonjs": "^9.3.4",
-    "rollup-plugin-node-resolve": "^4.2.3",
-    "rollup-plugin-replace": "^2.2.0",
-    "rollup-plugin-sass": "^1.2.2",
-    "rollup-plugin-uglify": "^6.0.2",
-    "rollup-plugin-vue": "^5.0.0",
+    "rollup": "^1.16.7",
+    "rollup-plugin-babel": "^3.0.0",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-css-only": "^1.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-uglify-es": "0.0.1",
+    "rollup-plugin-vue": "^5.0.1",
     "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10"
-  },
-  "browserslist": [
-    "> 1%, not dead",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  }
 }

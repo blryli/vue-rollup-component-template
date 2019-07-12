@@ -1,6 +1,6 @@
-# vue-virtual-scroller-docs
+# docs
 
-> Docs for vue-virtual-scroller
+> A Vue.js project
 
 ## Build Setup
 

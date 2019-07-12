@@ -1,72 +1,32 @@
-const hasOwnProperty = Object.prototype.hasOwnProperty;
+export const formatNumber = n => ('0'+n.toString()).slice(-2)
 
-export function hasOwn(obj, key) {
-  return hasOwnProperty.call(obj, key);
-};
+export const formatDate = function (date, format = 'yyyy-MM-dd hh:mm:ss') {
+  if (!date) return;
+  const Y = date.getFullYear()
+  const M = date.getMonth() + 1
+  const D = date.getDate()
+  const h = date.getHours()
+  const m = date.getMinutes()
+  const s = date.getSeconds()
 
-export const generateId = function () {
-  return Math.floor(Math.random() * 10000);
-};
-
-export const offset = function (target) {
-  if (!target || !target.offsetParent) return false;
-  let top = 0;
-  let left = 0;
-  while (target.offsetParent) {
-    top += target.offsetTop;
-    left += target.offsetLeft;
-    target = target.offsetParent;
+  const rules = {
+    yyyy: Y,
+    M: M,
+    MM: formatNumber(M),
+    d: D,
+    dd: formatNumber(D),
+    h: h,
+    hh: formatNumber(h),
+    m: m,
+    mm: formatNumber(m),
+    s: s,
+    ss: formatNumber(s)
   }
-  return {
-    top: top,
-    left: left
-  };
-}
-
-export const scroll = function () {
-  if (window.pageYOffset != null) {
-    return {
-      left: window.pageXOffset,
-      top: window.pageYOffset
-    }
-  } else if (document.compatMode == 'CSS1Compat') {
-    return {
-      left: document.documentElement.scrollLeft,
-      top: document.documentElement.scrollTop
-    }
+  const arr = format.split(/-| |:|\//)
+  let formatDate = format;
+  for (let i = 0; i < arr.length; i++) {
+    const el = arr[i];
+    formatDate = formatDate.replace(el, rules[el])
   }
-  return {
-    left: document.body.scrollLeft,
-    top: document.body.scrollTop
-  }
-}
-
-export const clone = function (obj) {
-  var o = obj instanceof Array ? [] : {};
-  for (var k in obj) {
-    o[k] = obj[k];
-  }
-  return o;
-}
-
-export const debounce = (func, wait = 300, immediate) => {
-  let timeout;
-
-  return function () {
-    let context = this;
-    let args = arguments;
-
-    if (timeout) clearTimeout(timeout);
-    if (immediate) {
-      var callNow = !timeout;
-      timeout = setTimeout(() => {
-        timeout = null;
-      }, wait)
-      if (callNow) func.apply(context, args)
-    } else {
-      timeout = setTimeout(function () {
-        func.apply(context, args)
-      }, wait);
-    }
-  }
+  return formatDate
 }
