@@ -16,11 +16,11 @@ export default {
       list: [
         {
           title: '文档',
-          url: 'https://github.com/blryli/vue-rollup-component-template'
+          url: 'https://juejin.im/post/5d255c566fb9a07eac05fbd8#heading-6'
         },
         {
           title: 'github',
-          url: 'https://github.com/blryli'
+          url: 'https://github.com/blryli/vue-rollup-component-template'
         }
       ]
     }
