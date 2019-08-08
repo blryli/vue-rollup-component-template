@@ -1,7 +1,16 @@
 {
-  "name": "vue-rollup-component-template",
+  "name": "vue-rollup--component-template",
   "version": "1.0.0",
   "description": "A rollup + vue component development template",
+  "keywords": [
+    "vue",
+    "vuejs",
+    "rollup",
+    "template",
+    "component"
+  ],
+  "author": "blryli",
+  "license": "MIT",
   "main": "dist/vue-rollup-component-template.umd.js",
   "module": "dist/vue-rollup-component-template.esm.js",
   "unpkg": "dist/vue-rollup-component-template.min.js",
@@ -12,16 +21,6 @@
     "build:umd": "rollup --config build/rollup.config.umd.js",
     "dev": "cross-env NODE_ENV=development rollup --config build/rollup.config.es.js --watch"
   },
-  "keywords": [
-    "vue",
-    "vuejs",
-    "rollup",
-    "rollupjs",
-    "template",
-    "component"
-  ],
-  "author": "blryli",
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/blryli/vue-rollup-component-template.git"
@@ -30,21 +29,23 @@
     "url": "https://github.com/blryli/vue-rollup-component-template/issues"
   },
   "homepage": "https://github.com/blryli/vue-rollup-component-template#readme",
+  "dependencies": {
+    "vue": "^2.6.10"
+  },
   "devDependencies": {
-    "babel-core": "^6.26.3",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "babel-plugin-module-resolver": "^3.2.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-3": "^6.24.1",
     "clean-css": "^4.2.1",
     "cross-env": "^5.2.0",
-    "rollup": "^1.16.7",
-    "rollup-plugin-babel": "^3.0.0",
-    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup": "^1.19.3",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.0.2",
     "rollup-plugin-css-only": "^1.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-uglify-es": "0.0.1",
     "rollup-plugin-vue": "^5.0.1",
-    "vue": "^2.6.10",
     "vue-template-compiler": "^2.6.10"
   }
 }
