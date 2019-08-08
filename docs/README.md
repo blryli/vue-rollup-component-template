@@ -1,6 +1,6 @@
-# docs
+# doce-src
 
-> A Vue.js project
+> A vue-rollup-component-template test template
 
 ## Build Setup
 
